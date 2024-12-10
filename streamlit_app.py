@@ -59,12 +59,12 @@ else :
         if "messages" not in st.session_state: #['beginner', 'intermediate', 'advanced']
             st.session_state.messages = {}
         if selected_chat not in st.session_state.messages :
-            text = f'you are chatting with user in context of '+ selected_chat
+            text = f'You are chatting with user in context of '+ selected_chat
             if (st.session_state.chat_list_option[selected_chat]['level'] == 'beginner') :
                 text += '. Talk with user in English, and suggest better chance for user to speak ' +st.session_state.chat_list_option[selected_chat]['language']
             else :
-                text += '. Talk with user in '+st.session_state.chat_list_option[selected_chat]['language']+', and make user\'s message more natural.'
-            text += ' make sure you search about newest information about ' + selected_chat + '.'
+                text += '. Talk with user in '+st.session_state.chat_list_option[selected_chat]['language']+', and make user\'s message more natural'
+            text += '. Make sure you search about newest information about ' + selected_chat + '.'
             st.session_state.messages[selected_chat] = [{'role':'system', 'content' : text}]
             st.write('prompt : ' + text)
 
