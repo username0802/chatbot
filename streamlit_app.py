@@ -42,9 +42,9 @@ st.header(selected_chat.capitalize())
 placeholder = st.empty()
 
 if selected_chat == 'main' :
-    st.write("This is chatbot that can be used to learn another language."
-    "Make new chatting with left header."
-    "You can input the topic you are interested in, and you can choose your language level."
+    st.write("This is chatbot that can be used to learn another language.\n"
+    "Make new chatting with left header.\n"
+    "You can input the topic you are interested in, and you can choose your language level.\n"
     )
     
 
@@ -62,13 +62,13 @@ else :
                 text += '. Talk with user in English, and suggest better chance for user to speak ' +st.session_state.chat_list_option[selected_chat]['language']
             else :
                 text += '. Talk with user in '+st.session_state.chat_list_option[selected_chat]['language']
-            text += ". Answer with a length similar to the user's input."
+            text += ". You don't have to answer too long. You are friend-like chat bot."
             st.session_state.messages[selected_chat] = [{'role':'system', 'content' : text}]
 
             if st.session_state.chat_list_option[selected_chat]['level'] == 'beginner' :
-                fixing_require = f"You are translator. Translate input texts in {st.session_state.chat_list_option[selected_chat]['language']}"
+                fixing_require = f"You are translator. Translate input texts in {st.session_state.chat_list_option[selected_chat]['language']}. you are not supposed to answer, but translate the input. TRANSLATE ENGLISH TO {st.session_state.chat_list_option[selected_chat]['language']}."
             else :
-                fixing_require = "You are writing assistant. You are not supposed to answer the question, but fixing the inpuy text. DON\'T ANSWER THE QUESTION. JUST FIX IT."
+                fixing_require = "You are writing assistant. You are not supposed to answer the question, but fixing the inpuy text."
             st.session_state.fix_messages[selected_chat] = [{'role':'system', 'content' : fixing_require}]
 
 
