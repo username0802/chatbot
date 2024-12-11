@@ -29,8 +29,11 @@ with st.sidebar:
     if new_chat:
         # Add the new chat to the list if the topic is not empty
         if topic:
-            st.session_state.chat_list.append(topic)
-            st.session_state.chat_list_option[topic] = {'language':language, 'level':level, 'topic':topic}
+            if topic in st.session_state.chat_list :
+                st.warning("Chatting already exists. Please choose another topic!")
+            else :
+                st.session_state.chat_list.append(topic)
+                st.session_state.chat_list_option[topic] = {'language':language, 'level':level, 'topic':topic}
         else:
             st.warning("Please write a topic before starting a new chat!")
 
@@ -42,10 +45,14 @@ st.header(selected_chat.capitalize())
 placeholder = st.empty()
 
 if selected_chat == 'main' :
-    st.write("This is chatbot that can be used to learn another language.\n"
-    "Make new chatting with left header.\n"
-    "You can input the topic you are interested in, and you can choose your language level.\n"
-    )
+    st.write("This is chatbot that can be used to learn another language.",
+             "Make new chatting with left header.",
+             "You can input the topic you are interested in, and you can choose your language level.")
+    st.write("beginner : If you send text in english, it would translate it into selected language.")
+    st.write("intermediate / advanced : It is option for people who can free-talk in selected language. chatbot would fix your sentences more naturally.")
+    placeholder = st.empty()
+    st.write("You can also fix prompt in the \"option\" tab.")
+
     
 
 else :
@@ -112,7 +119,10 @@ else :
                 with st.chat_message("user"):
                     st.markdown(prompt)
 
-                st.session_state.fix_messages[selected_chat].append({"role": "user", "content": prompt})
+                if st.session_state.chat_list_option[selected_chat]['level'] == 'beginner' :
+                    prompt_for_fix = "translate this in " + st.session_state.chat_list_option[selected_chat]['language'] + ". " + prompt
+
+                st.session_state.fix_messages[selected_chat].append({"role": "user", "content": prompt_for_fix})
                 st.session_state.messages[selected_chat].append({"role": "user", "content": prompt_with_context})
 
                 fix_stream = client.chat.completions.create(
@@ -123,7 +133,7 @@ else :
                     ],
                     stream=True,
                 )
-
+                
                 with st.chat_message("assistant"):
                     response = st.write_stream(fix_stream)
                 st.session_state.fix_messages[selected_chat].append({"role": "assistant", "content": response})
@@ -152,8 +162,12 @@ else :
 
 
     with option :
-        st.write(st.session_state.messages[selected_chat][0]['content'])
-        fixed_prompt = st.text_input("fix your prompt")
+        st.write("Your option :")
+        st.write("-selected language :", st.session_state.chat_list_option[selected_chat]['language'],
+        " \n -selected level :",st.session_state.chat_list_option[selected_chat]['level'])
+
+        st.write("".join(st.session_state.messages[selected_chat][0]['content'].split("chat bot.")[1:]))
+        fixed_prompt = st.text_input("add text into your prompt")
         if fixed_prompt :
             st.session_state.messages[selected_chat][0]['content'] += fixed_prompt
 
