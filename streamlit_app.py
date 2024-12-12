@@ -121,8 +121,10 @@ else :
 
                 if st.session_state.chat_list_option[selected_chat]['level'] == 'beginner' :
                     prompt_for_fix = "translate this in " + st.session_state.chat_list_option[selected_chat]['language'] + ". " + prompt
-
-                st.session_state.fix_messages[selected_chat].append({"role": "user", "content": prompt_for_fix})
+                    st.session_state.fix_messages[selected_chat].append({"role": "user", "content": prompt_for_fix})
+                
+                else :
+                    st.session_state.fix_messages[selected_chat].append({"role": "user", "content": prompt})
                 st.session_state.messages[selected_chat].append({"role": "user", "content": prompt_with_context})
 
                 fix_stream = client.chat.completions.create(
@@ -156,8 +158,9 @@ else :
                 with st.chat_message("assistant"):
                     response = st.write_stream(stream)
                 st.session_state.messages[selected_chat].append({"role": "assistant", "content": response})
-                st.session_state.messages[selected_chat][-2]['content'] = prompt
 
+                st.session_state.messages[selected_chat][-2]['content'] = prompt
+                st.session_state.fix_messages[selected_chat][-2]['content'] = prompt
                 
 
 
